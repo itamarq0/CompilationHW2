@@ -1,12 +1,15 @@
+
 #include <iostream>
 
+
+
 void lexicalError(){
-    std::out<<"Syntax error\n";
+    std::cout<<"Syntax error\n";
     exit(0);
 }
 
 int main(){
-    string input;
-    std::in>>input;
+    std::string input;
+    std::cin >> input;
     
 }
