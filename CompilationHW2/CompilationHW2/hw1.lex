@@ -39,7 +39,7 @@ false printLine(yylineno,"FALSE",yytext, yyleng);
 [\+-]?{digit}+ printLine(yylineno,"INTEGER",yytext, yyleng);
 ([\+-]?{digit}+\.{digit}*)|([\+-]?{digit}*\.{digit}+) printLine(yylineno,"REAL",yytext, yyleng);
 \/({digit}|{letter})+ printLine(yylineno,"NAME",yytext,yyleng);
-stream{newLine}([^e]|e[^n]|en[^d]|end[^s]|ends[^t]|endst[^r]|endstr[^e]|endstr[^e]|endstre[^a]|endstrea[^m]|endstream[^ \t\n\r])*{newLine}endstream/{end} printStream(yylineno, yytext,yyleng);
+stream({newLine}|(\r)?\nendstream)([^e]|e[^n]|en[^d]|end[^s]|ends[^t]|endst[^r]|endstr[^e]|endstr[^e]|endstre[^a]|endstrea[^m]|endstream[^ \t\n\r])*{newLine}endstream/{end} printStream(yylineno, yytext,yyleng);
 null printLine(yylineno,"NULL",yytext, yyleng);
 \( {BEGIN(STRING1); yymore(); }
 <STRING1>\) {BEGIN(INITIAL); printString1(yylineno,yytext,yyleng);}
@@ -56,7 +56,7 @@ null printLine(yylineno,"NULL",yytext, yyleng);
 <STRING2><<EOF>> {printf("Error unclosed string\n"); exit(0);}
 <STRING2>{hex} {printf("Error incomplete byte\n"); exit(0);}
 <STRING2>. string2bad(yytext,yyleng);
-stream\n[.\n]*\n+|stream\n {printf("Error unclosed stream\n"); exit(0);}
+((stream(\r)?\n(endstream)?([^e]|e[^n]|en[^d]|end[^s]|ends[^t]|endst[^r]|endstr[^e]|endstr[^e]|endstre[^a]|endstrea[^m]|endstream[^ \t\n\r])*)|stream(\r)?\n) {printf("Error unclosed stream\n"); exit(0);}
 <<EOF>> printEOF(yylineno);
 {whitespace} ;
 . badChar(yytext);
